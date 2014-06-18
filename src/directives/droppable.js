@@ -27,18 +27,20 @@ angular.module('hx-ui').directive('hxDroppable', function ($parse) {
 			// in options.
 			defaults.drop = function (event, ui) {
 
-				// Get the draggable's model object.
-				var model = $parse(
-					// Get the object name from the draggable-model attribute.
-					ui.draggable.attr('data-hx-draggable-model') ||
-					ui.draggable.attr('hx-draggable-model')
-					// And evaluate it against the draggable's object scope.
-				)(ui.draggable.scope());
+				$scope.$apply(function(){
+					// Get the draggable's model object.
+					var model = $parse(
+						// Get the object name from the draggable-model attribute.
+						ui.draggable.attr('data-hx-draggable-model') ||
+						ui.draggable.attr('hx-draggable-model')
+						// And evaluate it against the draggable's object scope.
+					)(ui.draggable.scope());
 
-				// Call the handler.
-				options.drop(model);
+					// Call the handler.
+					options.drop(model);
 
-				$scope.$apply();
+					return;
+				});
 
 				return;
 
