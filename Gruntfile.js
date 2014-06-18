@@ -1,14 +1,15 @@
 /*jshint node: true */
 'use strict';
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
 	/**
 	* Load required Grunt tasks matching the grunt-* pattern..
 	* These are installed based on the versions listed in `package.json
 	* when you do `npm install` in this directory.
 	*/
-	require('load-grunt-tasks')(grunt, {pattern: 'grunt-*'});
+	require('load-grunt-tasks')(grunt, {pattern: ['grunt-*']});
+	require('time-grunt')(grunt);
 
 	grunt.initConfig({
 		yeoman: {
@@ -37,6 +38,12 @@ module.exports = function(grunt) {
 			],
 			jshintrc: '.jshintrc'
 		},
+		karma: {
+			unit: {
+				configFile: 'karma.unit.js',
+				background: false
+			}
+		},
 		ngmin: {
 			dist: {
 				files: [{
@@ -47,6 +54,9 @@ module.exports = function(grunt) {
 		}
 	});
 
-	grunt.registerTask('build', ['jshint', 'clean', 'concat', 'ngmin']);
+	grunt.registerTask('build', ['jshint', 'karma', 'clean', 'concat', 'ngmin']);
+	grunt.registerTask('default', ['build']);
+
+	grunt.registerTask('test', ['karma']);
 
 };
