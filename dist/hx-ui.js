@@ -34,20 +34,22 @@ angular.module('hx-ui').directive('hxDraggable', [
         angular.extend(defaults, options);
         // Overwrite the handlers in order to call the ones defined
         // in options.
-        defaults.start = function () {
-          options.start(model);
-          $scope.$apply();
-          return;
-        };
-        defaults.stop = function () {
-          options.stop(model);
-          $scope.$apply();
-          return;
-        };
-        // Overwrite the helper if its value is 'multiple'.
-        if (defaults.helper === 'multiple') {
-          defaults.helper = defaults.getMultipleHelper;
-        }
+        [
+          'start',
+          'stop'
+        ].forEach(function (handler) {
+          defaults[handler] = function () {
+            if (!options[handler]) {
+              return;
+            }
+            $scope.$apply(function () {
+              // Call the handler's callback with the current model.
+              options[handler](model);
+              return;
+            });
+            return;
+          };
+        });
         // Make the element draggable.
         $iElement.draggable(defaults);
         return;
