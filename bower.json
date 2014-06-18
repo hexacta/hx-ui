@@ -1,0 +1,11 @@
+{
+	"name": "hx-ui",
+	"description": "Directives for jQueryUI and AngularJS integration.",
+	"main": "dist/hx-ui.js",
+	"version": "0.0.1",
+	"dependencies": {
+		"angular": "~1.2.x",
+		"jquery": "~2.1.x",
+		"jquery-ui": "~1.10.x"
+	}
+}
