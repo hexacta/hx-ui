@@ -1,6 +1,6 @@
 #HX-UI#
 
-Collection of directives to integrate jQuery UI interactions/widgets and AngularJS.
+Collection of directives to integrate jQuery UI interactions/widgets and AngularJS. [![Build Status](https://travis-ci.org/hexacta/hx-ui.svg?branch=master)](https://travis-ci.org/hexacta/hx-ui)
 
 ##Requirements##
  - jQuery
@@ -23,5 +23,3 @@ var myAppModule = angular.module('MyApp', ['hx-ui'])
 
 ##TODO##
  - Add demos and directive usage notes.
- - Add unit tests.
- - Enable Travis CI.
