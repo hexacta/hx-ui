@@ -6,8 +6,7 @@ describe('hxDraggable directive', function(){
 
 	beforeEach(module('hx-ui'));
 
-	var $element,
-		$scope;
+	var $element, $scope, options;
 
 	beforeEach(inject(function ($compile, $rootScope) {
 		$scope = $rootScope.$new();
@@ -22,30 +21,25 @@ describe('hxDraggable directive', function(){
 		};
 
 		$element = $compile('<div data-hx-draggable="config.draggable" data-hx-draggable-model="config.model"></div>')($scope);
+		options = $element.data('ui-draggable').options;
 	}));
 
 	it('should make the element draggable', function(){
 		expect($element.data('ui-draggable')).toBeDefined();
 	});
 
-	it('should call the start callback', function (done) {
+	it('should call the start callback', function(){
 		spyOn($scope.config.draggable, 'start');
 
-		$element.trigger('dragstart');
-		setTimeout(function(){
-			expect($scope.config.draggable.start).toHaveBeenCalledWith($scope.config.model);
-			done();
-		}, 250);
+		options.start();
+		expect($scope.config.draggable.start).toHaveBeenCalledWith($scope.config.model);
 	});
 
-	it('should call the stop callback', function (done) {
+	it('should call the stop callback', function(){
 		spyOn($scope.config.draggable, 'stop');
 
-		$element.trigger('dragstop');
-		setTimeout(function(){
-			expect($scope.config.draggable.stop).toHaveBeenCalledWith($scope.config.model);
-			done();
-		}, 250);
+		options.stop();
+		expect($scope.config.draggable.stop).toHaveBeenCalledWith($scope.config.model);
 	});
 
 });

@@ -7,7 +7,8 @@ describe('hxDroppable directive', function(){
 	beforeEach(module('hx-ui'));
 
 	var $draggable, $droppable,
-		$draggableScope, $droppableScope;
+		$draggableScope, $droppableScope,
+		droppableOptions;
 
 	beforeEach(inject(function ($compile, $rootScope) {
 		// Use different scopes for testing.
@@ -25,27 +26,24 @@ describe('hxDroppable directive', function(){
 		$droppableScope = $rootScope.$new();
 		$droppableScope.config = {
 			droppable: {
-				start: function(){},
-				stop: function(){}
+				drop: function(){}
 			}
 		};
 
 		$draggable = $compile('<div data-hx-draggable="config.draggable" data-hx-draggable-model="config.model"></div>')($draggableScope);
 		$droppable = $compile('<div data-hx-droppable="config.droppable"></div>')($droppableScope);
+		droppableOptions = $droppable.data('ui-droppable').options;
 	}));
 
 	it('should make the element droppable', function(){
 		expect($droppable.data('ui-droppable')).toBeDefined();
 	});
 
-	it('should call the drop callback and pass the draggable', function (done) {
-		spyOn($droppableScope.config.droppable, 'stop');
+	it('should call the drop callback and pass the draggable and the droppable $scope', function(){
+		spyOn($droppableScope.config.droppable, 'drop');
 
-		$droppable.trigger('drop');
-		setTimeout(function(){
-			expect($droppableScope.config.droppable.stop).toHaveBeenCalledWith($draggableScope.config.model);
-			done();
-		}, 250);
+		droppableOptions.drop({}, {draggable: $draggable});
+		expect($droppableScope.config.droppable.drop).toHaveBeenCalledWith($draggableScope.config.model, $droppableScope);
 	});
 
 });
