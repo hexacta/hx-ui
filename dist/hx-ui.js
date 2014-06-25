@@ -81,13 +81,35 @@ angular.module('hx-ui').directive('hxDroppable', [
         // Overwrite the handlers in order to call the ones defined
         // in options.
         defaults.drop = function (event, ui) {
-          // Get the draggable's model object.
-          var model = $parse(ui.draggable.attr('data-hx-draggable-model') || ui.draggable.attr('hx-draggable-model'))(ui.draggable.scope());
-          // Call the handler.
-          options.drop(model);
-          $scope.$apply();
+          if (!options.drop) {
+            return;
+          }
+          $scope.$apply(function () {
+            // Get the draggable's model object.
+            var model = $parse(ui.draggable.attr('data-hx-draggable-model') || ui.draggable.attr('hx-draggable-model'))(ui.draggable.scope());
+            // Call the handler, pass the model dropped and the $scope of the
+            // droppable.
+            options.drop(model, $scope);
+            return;
+          });
           return;
         };
+        [
+          'over',
+          'out'
+        ].forEach(function (handler) {
+          defaults[handler] = function () {
+            if (!options[handler]) {
+              return;
+            }
+            $scope.$apply(function () {
+              // Call the handler's callback.
+              options[handler]();
+              return;
+            });
+            return;
+          };
+        });
         // Make the element droppable.
         $iElement.droppable(defaults);
         return;
