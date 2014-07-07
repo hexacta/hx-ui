@@ -21,6 +21,20 @@ angular.module('hx-ui').directive('hxDraggable', function ($parse) {
 
 			// Get the model object.
 			var model = $parse($iAttr.hxDraggableModel)($scope);
+			// Extend the model with enable/disable methods.
+			if (!model.$draggable) {
+				model.$draggable = {};
+			}
+			model.$draggable = {
+				$enable: function(){
+					$iElement.draggable('enable');
+					return;
+				},
+				$disable: function(){
+					$iElement.draggable('disable');
+					return;
+				}
+			};
 
 			var defaults = {};
 
@@ -42,6 +56,18 @@ angular.module('hx-ui').directive('hxDraggable', function ($parse) {
 					return;
 				};
 			});
+
+			// Overwrite drag handler.
+			defaults.drag = function(event, ui){
+				if (!options.drag) { return; }
+
+				$scope.$apply(function(){
+					options.drag(event, ui);
+					return;
+				});
+
+				return;
+			};
 
 			// Make the element draggable.
 			$iElement.draggable(defaults);
